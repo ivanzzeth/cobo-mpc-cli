@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "bin": {
-    "cobo-mpc-cli": "./index.js"
+    "cobo-mpc-cli": "index.js"
   },
   "scripts": {
     "start": "node index.js"
@@ -29,7 +29,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ivanzzeth/cobo-mpc-cli.git"
+    "url": "git+https://github.com/ivanzzeth/cobo-mpc-cli.git"
   },
   "homepage": "https://github.com/ivanzzeth/cobo-mpc-cli#readme",
   "bugs": {
