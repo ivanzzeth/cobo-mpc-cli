@@ -36,12 +36,25 @@ List all transactions with optional filters:
 # Basic usage
 cobo-mpc-cli tx list
 
-# With filters
+# With basic filters
 cobo-mpc-cli tx list \
   --limit 20 \
   --statuses Completed,Failed \
   --types Withdrawal,Deposit \
   --chain-ids ETH,BTC
+
+# With advanced filters
+cobo-mpc-cli tx list \
+  --wallet-type MPC \
+  --wallet-subtype Org-Controlled \
+  --token-ids ETH_USDT,ETH_USDC \
+  --min-created-timestamp 1635744000000 \
+  --max-created-timestamp 1635830400000
+
+# Filter by specific identifiers
+cobo-mpc-cli tx list \
+  --cobo-ids "20231213122855000000000000000000" \
+  --transaction-hashes "239861be9a4afe080c359b7fe4a1d035945ec46256b1a0f44d1267c71de8ec28"
 
 # JSON output
 cobo-mpc-cli tx list --json
@@ -54,9 +67,19 @@ cobo-mpc-cli tx list --after "cursor-string" --limit 50
 - `-l, --limit <number>` - Maximum number of transactions (default: 10)
 - `-s, --statuses <statuses>` - Filter by statuses (comma-separated)
 - `-t, --types <types>` - Filter by types (comma-separated)
-- `-w, --wallet-ids <ids>` - Filter by wallet IDs
-- `-c, --chain-ids <ids>` - Filter by chain IDs
-- `--transaction-ids <ids>` - Filter by transaction IDs
+- `-w, --wallet-ids <ids>` - Filter by wallet IDs (comma-separated)
+- `-c, --chain-ids <ids>` - Filter by chain IDs (comma-separated)
+- `--transaction-ids <ids>` - Filter by transaction IDs (comma-separated)
+- `--cobo-ids <ids>` - Filter by Cobo IDs (comma-separated)
+- `--transaction-hashes <hashes>` - Filter by transaction hashes (comma-separated)
+- `--token-ids <ids>` - Filter by token IDs (comma-separated)
+- `--asset-ids <ids>` - Filter by asset IDs (comma-separated, Exchange Wallets only)
+- `--vault-id <id>` - Filter by vault ID
+- `--wallet-type <type>` - Filter by wallet type (Custodial, MPC, SmartContract, Exchange)
+- `--wallet-subtype <subtype>` - Filter by wallet subtype (Asset, Web3, Org-Controlled, User-Controlled, Safe{Wallet}, Main, Sub)
+- `--project-id <id>` - Filter by project ID (User-Controlled Wallets only)
+- `--min-created-timestamp <timestamp>` - Filter by minimum created timestamp (milliseconds)
+- `--max-created-timestamp <timestamp>` - Filter by maximum created timestamp (milliseconds)
 - `--request-id <id>` - Filter by request ID
 - `--before <cursor>` - Pagination cursor for previous page
 - `--after <cursor>` - Pagination cursor for next page

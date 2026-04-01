@@ -69,6 +69,16 @@ export async function listTransactions(options) {
   if (options.walletIds) opts.wallet_ids = options.walletIds;
   if (options.chainIds) opts.chain_ids = options.chainIds;
   if (options.transactionIds) opts.transaction_ids = options.transactionIds;
+  if (options.coboIds) opts.cobo_ids = options.coboIds;
+  if (options.transactionHashes) opts.transaction_hashes = options.transactionHashes;
+  if (options.tokenIds) opts.token_ids = options.tokenIds;
+  if (options.assetIds) opts.asset_ids = options.assetIds;
+  if (options.vaultId) opts.vault_id = options.vaultId;
+  if (options.walletType) opts.wallet_type = options.walletType;
+  if (options.walletSubtype) opts.wallet_subtype = options.walletSubtype;
+  if (options.projectId) opts.project_id = options.projectId;
+  if (options.minCreatedTimestamp) opts.min_created_timestamp = parseInt(options.minCreatedTimestamp);
+  if (options.maxCreatedTimestamp) opts.max_created_timestamp = parseInt(options.maxCreatedTimestamp);
   if (options.requestId) opts.request_id = options.requestId;
   if (options.before) opts.before = options.before;
   if (options.after) opts.after = options.after;
