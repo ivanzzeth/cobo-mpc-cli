@@ -108,10 +108,10 @@ export async function listTransactions(options) {
     console.log('\nPagination:');
     console.log(`  Total Count: ${data.pagination.total_count || 'N/A'}`);
     if (data.pagination.before) {
-      console.log(`  Before cursor: ${data.pagination.before.substring(0, 20)}...`);
+      console.log(`  Before cursor: ${data.pagination.before}`);
     }
     if (data.pagination.after) {
-      console.log(`  After cursor: ${data.pagination.after.substring(0, 20)}...`);
+      console.log(`  After cursor: ${data.pagination.after}`);
     }
   }
 }
