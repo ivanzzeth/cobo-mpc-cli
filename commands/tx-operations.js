@@ -341,7 +341,7 @@ export async function dropTransaction(transactionId, options) {
   console.log('');
 
   try {
-    const result = await apiInstance.dropTransactionById(transactionId, { transactionRbf });
+    const result = await apiInstance.dropTransactionById(transactionId, { TransactionRbf: transactionRbf });
 
     console.log('Transaction drop submitted successfully!\n');
     console.log('Result:');
@@ -469,7 +469,7 @@ export async function speedupTransaction(transactionId, options) {
   console.log('');
 
   try {
-    const result = await apiInstance.speedupTransactionById(transactionId, { transactionRbf });
+    const result = await apiInstance.speedupTransactionById(transactionId, { TransactionRbf: transactionRbf });
 
     console.log('Transaction speedup submitted successfully!\n');
     console.log('Result:');
