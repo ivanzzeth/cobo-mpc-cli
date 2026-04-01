@@ -197,3 +197,126 @@ export async function dropTransaction(transactionId, options) {
 
   return result;
 }
+
+/**
+ * Speed up a transaction using RBF
+ */
+export async function speedupTransaction(transactionId, options) {
+  const apiInstance = initClient();
+
+  // Generate a unique request ID
+  const requestId = `speedup-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+
+  // Build fee object based on fee type
+  let fee;
+
+  switch (options.feeType) {
+    case 'EVM_EIP_1559':
+      if (!options.maxFee || !options.priorityFee) {
+        throw new Error('EVM_EIP_1559 requires --max-fee and --priority-fee options');
+      }
+      fee = {
+        fee_type: 'EVM_EIP_1559',
+        max_fee_per_gas: options.maxFee,
+        max_priority_fee_per_gas: options.priorityFee,
+      };
+      if (options.tokenId) fee.token_id = options.tokenId;
+      if (options.gasLimit) fee.gas_limit = options.gasLimit;
+      break;
+
+    case 'EVM_Legacy':
+      if (!options.gasPrice) {
+        throw new Error('EVM_Legacy requires --gas-price option');
+      }
+      fee = {
+        fee_type: 'EVM_Legacy',
+        gas_price: options.gasPrice,
+      };
+      if (options.tokenId) fee.token_id = options.tokenId;
+      if (options.gasLimit) fee.gas_limit = options.gasLimit;
+      break;
+
+    case 'Fixed':
+      if (!options.tokenId) {
+        throw new Error('Fixed fee type requires --token-id option');
+      }
+      fee = {
+        fee_type: 'Fixed',
+        token_id: options.tokenId,
+      };
+      if (options.maxFeeAmount) fee.max_fee_amount = options.maxFeeAmount;
+      break;
+
+    case 'UTXO':
+      if (!options.tokenId) {
+        throw new Error('UTXO fee type requires --token-id option');
+      }
+      fee = {
+        fee_type: 'UTXO',
+        token_id: options.tokenId,
+      };
+      if (options.feeRate) fee.fee_rate = options.feeRate;
+      if (options.maxFeeAmount) fee.max_fee_amount = options.maxFeeAmount;
+      break;
+
+    case 'SOL':
+      if (!options.computeUnitPrice || !options.computeUnitLimit) {
+        throw new Error('SOL fee type requires --compute-unit-price and --compute-unit-limit options');
+      }
+      fee = {
+        fee_type: 'SOL',
+        compute_unit_price: options.computeUnitPrice,
+        compute_unit_limit: options.computeUnitLimit,
+      };
+      if (options.tokenId) fee.token_id = options.tokenId;
+      break;
+
+    case 'FIL':
+      if (!options.gasFeeCap || !options.gasPremium) {
+        throw new Error('FIL fee type requires --gas-fee-cap and --gas-premium options');
+      }
+      fee = {
+        fee_type: 'FIL',
+        gas_fee_cap: options.gasFeeCap,
+        gas_premium: options.gasPremium,
+      };
+      if (options.tokenId) fee.token_id = options.tokenId;
+      if (options.gasLimit) fee.gas_limit = options.gasLimit;
+      break;
+
+    default:
+      throw new Error(`Unknown fee type: ${options.feeType}. Use EVM_EIP_1559, EVM_Legacy, Fixed, UTXO, SOL, or FIL`);
+  }
+
+  const transactionRbf = {
+    request_id: requestId,
+    fee: fee,
+  };
+
+  console.log(`Speeding up transaction: ${transactionId}...\n`);
+  console.log('RBF Parameters:');
+  console.log(`  Request ID: ${requestId}`);
+  console.log(`  Fee Type: ${options.feeType}`);
+  if (options.maxFee) console.log(`  Max Fee per Gas: ${options.maxFee}`);
+  if (options.priorityFee) console.log(`  Priority Fee per Gas: ${options.priorityFee}`);
+  if (options.gasPrice) console.log(`  Gas Price: ${options.gasPrice}`);
+  if (options.gasLimit) console.log(`  Gas Limit: ${options.gasLimit}`);
+  if (options.feeRate) console.log(`  Fee Rate: ${options.feeRate}`);
+  if (options.maxFeeAmount) console.log(`  Max Fee Amount: ${options.maxFeeAmount}`);
+  if (options.computeUnitPrice) console.log(`  Compute Unit Price: ${options.computeUnitPrice}`);
+  if (options.computeUnitLimit) console.log(`  Compute Unit Limit: ${options.computeUnitLimit}`);
+  if (options.gasFeeCap) console.log(`  Gas Fee Cap: ${options.gasFeeCap}`);
+  if (options.gasPremium) console.log(`  Gas Premium: ${options.gasPremium}`);
+  if (options.tokenId) console.log(`  Token ID: ${options.tokenId}`);
+  console.log('');
+
+  const result = await apiInstance.speedupTransactionById(transactionId, { transactionRbf });
+
+  console.log('Transaction speedup submitted successfully!\n');
+  console.log('Result:');
+  console.log(`  Request ID: ${result.request_id}`);
+  console.log(`  Transaction ID: ${result.transaction_id}`);
+  console.log(`  Status: ${result.status}`);
+
+  return result;
+}

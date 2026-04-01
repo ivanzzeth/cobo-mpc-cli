@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { listTransactions, cancelTransaction, dropTransaction } from './tx-operations.js';
+import { listTransactions, cancelTransaction, dropTransaction, speedupTransaction } from './tx-operations.js';
 
 export function createTxCommand() {
   const txCommand = new Command('tx')
@@ -54,6 +54,31 @@ export function createTxCommand() {
     .action(async (transactionId, options) => {
       try {
         await dropTransaction(transactionId, options);
+      } catch (error) {
+        console.error('Error:', error.message);
+        process.exit(1);
+      }
+    });
+
+  // Speed up transaction command
+  txCommand
+    .command('speedup <transactionId>')
+    .description('Speed up a broadcasting transaction using RBF (Replace-By-Fee)')
+    .requiredOption('-f, --fee-type <type>', 'Fee type: EVM_EIP_1559, EVM_Legacy, Fixed, UTXO, SOL, or FIL')
+    .option('--max-fee <amount>', 'Max fee per gas (for EVM_EIP_1559)')
+    .option('--priority-fee <amount>', 'Priority fee per gas (for EVM_EIP_1559)')
+    .option('--gas-price <amount>', 'Gas price (for EVM_Legacy)')
+    .option('--gas-limit <amount>', 'Gas limit (for EVM transactions)')
+    .option('--fee-rate <rate>', 'Fee rate in sat/vByte (for UTXO)')
+    .option('--max-fee-amount <amount>', 'Max fee amount (for Fixed/UTXO)')
+    .option('--compute-unit-price <price>', 'Compute unit price (for SOL)')
+    .option('--compute-unit-limit <limit>', 'Compute unit limit (for SOL)')
+    .option('--gas-fee-cap <cap>', 'Gas fee cap (for FIL)')
+    .option('--gas-premium <premium>', 'Gas premium (for FIL)')
+    .option('--token-id <id>', 'Token ID for fee (e.g., ETH, BTC, SOL)')
+    .action(async (transactionId, options) => {
+      try {
+        await speedupTransaction(transactionId, options);
       } catch (error) {
         console.error('Error:', error.message);
         process.exit(1);
