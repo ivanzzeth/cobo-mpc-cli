@@ -262,15 +262,20 @@ export async function cancelTransaction(transactionId) {
 
   console.log(`Canceling transaction: ${transactionId}...\n`);
 
-  const result = await apiInstance.cancelTransactionById(transactionId);
+  try {
+    const result = await apiInstance.cancelTransactionById(transactionId);
 
-  console.log('Transaction cancellation submitted successfully!\n');
-  console.log('Result:');
-  console.log(`  Request ID: ${result.request_id}`);
-  console.log(`  Transaction ID: ${result.transaction_id}`);
-  console.log(`  Status: ${result.status}`);
+    console.log('Transaction cancellation submitted successfully!\n');
+    console.log('Result:');
+    console.log(`  Request ID: ${result.request_id}`);
+    console.log(`  Transaction ID: ${result.transaction_id}`);
+    console.log(`  Status: ${result.status}`);
 
-  return result;
+    return result;
+  } catch (error) {
+    console.error('\nAPI Error:', error.response?.data || error.message || error);
+    throw error;
+  }
 }
 
 /**
@@ -335,15 +340,20 @@ export async function dropTransaction(transactionId, options) {
   if (options.tokenId) console.log(`  Token ID: ${options.tokenId}`);
   console.log('');
 
-  const result = await apiInstance.dropTransactionById(transactionId, { transactionRbf });
+  try {
+    const result = await apiInstance.dropTransactionById(transactionId, { transactionRbf });
 
-  console.log('Transaction drop submitted successfully!\n');
-  console.log('Result:');
-  console.log(`  Request ID: ${result.request_id}`);
-  console.log(`  Transaction ID: ${result.transaction_id}`);
-  console.log(`  Status: ${result.status}`);
+    console.log('Transaction drop submitted successfully!\n');
+    console.log('Result:');
+    console.log(`  Request ID: ${result.request_id}`);
+    console.log(`  Transaction ID: ${result.transaction_id}`);
+    console.log(`  Status: ${result.status}`);
 
-  return result;
+    return result;
+  } catch (error) {
+    console.error('\nAPI Error:', error.response?.data || error.message || error);
+    throw error;
+  }
 }
 
 /**
@@ -458,13 +468,18 @@ export async function speedupTransaction(transactionId, options) {
   if (options.tokenId) console.log(`  Token ID: ${options.tokenId}`);
   console.log('');
 
-  const result = await apiInstance.speedupTransactionById(transactionId, { transactionRbf });
+  try {
+    const result = await apiInstance.speedupTransactionById(transactionId, { transactionRbf });
 
-  console.log('Transaction speedup submitted successfully!\n');
-  console.log('Result:');
-  console.log(`  Request ID: ${result.request_id}`);
-  console.log(`  Transaction ID: ${result.transaction_id}`);
-  console.log(`  Status: ${result.status}`);
+    console.log('Transaction speedup submitted successfully!\n');
+    console.log('Result:');
+    console.log(`  Request ID: ${result.request_id}`);
+    console.log(`  Transaction ID: ${result.transaction_id}`);
+    console.log(`  Status: ${result.status}`);
 
-  return result;
+    return result;
+  } catch (error) {
+    console.error('\nAPI Error:', error.response?.data || error.message || error);
+    throw error;
+  }
 }
