@@ -1,6 +1,6 @@
 {
   "name": "cobo-mpc-cli",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Modular CLI tool for Cobo MPC Wallet interaction",
   "main": "index.js",
   "type": "module",
