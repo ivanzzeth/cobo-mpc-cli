@@ -5,9 +5,9 @@ import 'dotenv/config';
 import { listTransactions, cancelTransaction, dropTransaction } from './commands.js';
 
 program
-  .name('cobo-tx')
-  .description('CLI tool for managing Cobo transactions')
-  .version('1.0.0')
+  .name('cobo-mpc-cli')
+  .description('Modular CLI tool for Cobo MPC Wallet interaction')
+  .version('0.0.1')
   .option('-e, --env <environment>', 'Environment: dev or prod', 'prod')
   .option('-k, --private-key <key>', 'Cobo API private key (or set COBO_PRIVATE_KEY env var)')
   .hook('preAction', (thisCommand, actionCommand) => {
