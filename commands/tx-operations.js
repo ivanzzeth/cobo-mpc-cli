@@ -168,6 +168,9 @@ export async function getTransaction(transactionId, options) {
   if (tx.destination) {
     console.log('\n=== Destination ===');
     console.log(`Destination Type: ${tx.destination.destination_type || 'N/A'}`);
+    if (tx.destination.address) console.log(`Address: ${tx.destination.address}`);
+    if (tx.destination.value) console.log(`Value: ${tx.destination.value}`);
+    if (tx.destination.calldata) console.log(`Has Calldata: Yes (${tx.destination.calldata.length} bytes)`);
     if (tx.destination.account_output) {
       const dest = tx.destination.account_output;
       if (dest.address) console.log(`Address: ${dest.address}`);
@@ -235,7 +238,9 @@ export async function getTransaction(transactionId, options) {
   if (tx.timeline) {
     console.log('\n=== Timeline ===');
     tx.timeline.forEach(event => {
-      console.log(`[${formatTimestamp(event.timestamp)}] ${event.status}`);
+      const timestamp = event.finished_timestamp || event.timestamp;
+      const status = event.finished ? '✓' : '○';
+      console.log(`${status} [${formatTimestamp(timestamp)}] ${event.status}`);
       if (event.description) console.log(`  ${event.description}`);
     });
   }
