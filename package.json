@@ -1,0 +1,26 @@
+{
+  "name": "cobo-tx-cli",
+  "version": "1.0.0",
+  "description": "CLI tool for managing Cobo transactions - list, cancel, and drop transactions",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "cobo-tx": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@cobo/cobo-waas2": "^1.33.0",
+    "commander": "^12.0.0",
+    "dotenv": "^16.4.0",
+    "console.table": "^0.10.0"
+  },
+  "keywords": [
+    "cobo",
+    "waas",
+    "blockchain",
+    "transactions"
+  ],
+  "license": "MIT"
+}
