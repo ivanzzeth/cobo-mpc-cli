@@ -107,6 +107,131 @@ export async function listTransactions(options) {
 }
 
 /**
+ * Get transaction details
+ */
+export async function getTransaction(transactionId, options) {
+  const apiInstance = initClient();
+
+  console.log(`Fetching transaction: ${transactionId}...\n`);
+
+  const tx = await apiInstance.getTransactionById(transactionId);
+
+  if (options.json) {
+    console.log(JSON.stringify(tx, null, 2));
+    return;
+  }
+
+  // Display basic info
+  console.log('=== Basic Information ===');
+  console.log(`Transaction ID: ${tx.transaction_id || 'N/A'}`);
+  console.log(`Cobo ID: ${tx.cobo_id || 'N/A'}`);
+  console.log(`Request ID: ${tx.request_id || 'N/A'}`);
+  console.log(`Type: ${tx.type || 'N/A'}`);
+  console.log(`Status: ${tx.status || 'N/A'}`);
+  if (tx.sub_status) console.log(`Sub Status: ${tx.sub_status}`);
+  console.log(`Created: ${formatTimestamp(tx.created_timestamp)}`);
+  console.log(`Updated: ${formatTimestamp(tx.updated_timestamp)}`);
+  if (tx.completed_timestamp) {
+    console.log(`Completed: ${formatTimestamp(tx.completed_timestamp)}`);
+  }
+
+  // Display blockchain info
+  console.log('\n=== Blockchain Information ===');
+  console.log(`Chain ID: ${tx.chain_id || 'N/A'}`);
+  console.log(`Token ID: ${tx.token_id || 'N/A'}`);
+  console.log(`Transaction Hash: ${tx.transaction_hash || 'Pending'}`);
+  if (tx.block_info) {
+    console.log(`Block Height: ${tx.block_info.block_height || 'N/A'}`);
+    console.log(`Block Hash: ${tx.block_info.block_hash || 'N/A'}`);
+    console.log(`Block Time: ${formatTimestamp(tx.block_info.block_time)}`);
+  }
+
+  // Display source/destination
+  if (tx.source) {
+    console.log('\n=== Source ===');
+    console.log(`Source Type: ${tx.source.source_type || 'N/A'}`);
+    if (tx.source.wallet_id) console.log(`Wallet ID: ${tx.source.wallet_id}`);
+    if (tx.source.address) console.log(`Address: ${tx.source.address}`);
+    if (tx.source.amount) console.log(`Amount: ${tx.source.amount}`);
+  }
+
+  if (tx.destination) {
+    console.log('\n=== Destination ===');
+    console.log(`Destination Type: ${tx.destination.destination_type || 'N/A'}`);
+    if (tx.destination.account_output) {
+      const dest = tx.destination.account_output;
+      if (dest.address) console.log(`Address: ${dest.address}`);
+      if (dest.amount) console.log(`Amount: ${dest.amount}`);
+      if (dest.memo) console.log(`Memo: ${dest.memo}`);
+    }
+    if (tx.destination.utxo_outputs) {
+      console.log(`UTXO Outputs: ${tx.destination.utxo_outputs.length} outputs`);
+      tx.destination.utxo_outputs.forEach((utxo, idx) => {
+        console.log(`  [${idx}] ${utxo.address}: ${utxo.amount}`);
+      });
+    }
+  }
+
+  // Display fee info
+  if (tx.fee) {
+    console.log('\n=== Fee Information ===');
+    console.log(`Fee Type: ${tx.fee.fee_type || 'N/A'}`);
+    console.log(`Token ID: ${tx.fee.token_id || 'N/A'}`);
+
+    if (tx.fee.actual_fee) console.log(`Actual Fee: ${tx.fee.actual_fee}`);
+    if (tx.fee.fee_used) console.log(`Fee Used: ${tx.fee.fee_used}`);
+
+    // Display type-specific fee details
+    switch (tx.fee.fee_type) {
+      case 'EVM_EIP_1559':
+        if (tx.fee.max_fee_per_gas) console.log(`Max Fee Per Gas: ${tx.fee.max_fee_per_gas} wei`);
+        if (tx.fee.max_priority_fee_per_gas) console.log(`Max Priority Fee: ${tx.fee.max_priority_fee_per_gas} wei`);
+        if (tx.fee.gas_limit) console.log(`Gas Limit: ${tx.fee.gas_limit}`);
+        if (tx.fee.gas_used) console.log(`Gas Used: ${tx.fee.gas_used}`);
+        break;
+
+      case 'EVM_Legacy':
+        if (tx.fee.gas_price) console.log(`Gas Price: ${tx.fee.gas_price} wei`);
+        if (tx.fee.gas_limit) console.log(`Gas Limit: ${tx.fee.gas_limit}`);
+        if (tx.fee.gas_used) console.log(`Gas Used: ${tx.fee.gas_used}`);
+        break;
+
+      case 'UTXO':
+        if (tx.fee.fee_rate) console.log(`Fee Rate: ${tx.fee.fee_rate} sat/vByte`);
+        break;
+
+      case 'SOL':
+        if (tx.fee.compute_unit_price) console.log(`Compute Unit Price: ${tx.fee.compute_unit_price}`);
+        if (tx.fee.compute_unit_limit) console.log(`Compute Unit Limit: ${tx.fee.compute_unit_limit}`);
+        break;
+
+      case 'FIL':
+        if (tx.fee.gas_fee_cap) console.log(`Gas Fee Cap: ${tx.fee.gas_fee_cap}`);
+        if (tx.fee.gas_premium) console.log(`Gas Premium: ${tx.fee.gas_premium}`);
+        if (tx.fee.gas_limit) console.log(`Gas Limit: ${tx.fee.gas_limit}`);
+        break;
+    }
+  }
+
+  // Display timeline
+  if (tx.timeline) {
+    console.log('\n=== Timeline ===');
+    tx.timeline.forEach(event => {
+      console.log(`[${formatTimestamp(event.timestamp)}] ${event.status}`);
+      if (event.description) console.log(`  ${event.description}`);
+    });
+  }
+
+  // Display notes
+  if (tx.description) {
+    console.log('\n=== Notes ===');
+    console.log(tx.description);
+  }
+
+  return tx;
+}
+
+/**
  * Cancel a transaction
  */
 export async function cancelTransaction(transactionId) {

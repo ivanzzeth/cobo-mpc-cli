@@ -63,6 +63,31 @@ cobo-mpc-cli tx list --after "cursor-string" --limit 50
 - `--direction <dir>` - Sort direction: ASC or DESC (default: DESC)
 - `--json` - Output as JSON
 
+#### Get Transaction Details
+
+Get detailed information about a specific transaction including fee breakdown:
+
+```bash
+# Formatted output with fee details
+cobo-mpc-cli tx get <transaction-id>
+
+# JSON output
+cobo-mpc-cli tx get <transaction-id> --json
+```
+
+**Example:**
+```bash
+cobo-mpc-cli tx get f47ac10b-58cc-4372-a567-0e02b2c3d479
+```
+
+The detailed view includes:
+- Basic information (ID, status, type, timestamps)
+- Blockchain information (chain, token, hash, block info)
+- Source and destination details
+- **Fee breakdown** (gas price, gas limit, fee rate, compute units, etc.)
+- Transaction timeline
+- Notes and descriptions
+
 #### Cancel Transaction
 
 Cancel a pending transaction:

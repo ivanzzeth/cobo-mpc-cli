@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { listTransactions, cancelTransaction, dropTransaction, speedupTransaction } from './tx-operations.js';
+import { listTransactions, getTransaction, cancelTransaction, dropTransaction, speedupTransaction } from './tx-operations.js';
 
 export function createTxCommand() {
   const txCommand = new Command('tx')
@@ -23,6 +23,20 @@ export function createTxCommand() {
     .action(async (options) => {
       try {
         await listTransactions(options);
+      } catch (error) {
+        console.error('Error:', error.message);
+        process.exit(1);
+      }
+    });
+
+  // Get transaction details command
+  txCommand
+    .command('get <transactionId>')
+    .description('Get detailed information about a specific transaction')
+    .option('--json', 'Output as JSON')
+    .action(async (transactionId, options) => {
+      try {
+        await getTransaction(transactionId, options);
       } catch (error) {
         console.error('Error:', error.message);
         process.exit(1);
