@@ -176,16 +176,16 @@ export async function getTransaction(transactionId, options) {
   if (tx.fee) {
     console.log('\n=== Fee Information ===');
     console.log(`Fee Type: ${tx.fee.fee_type || 'N/A'}`);
-    console.log(`Token ID: ${tx.fee.token_id || 'N/A'}`);
-
-    if (tx.fee.actual_fee) console.log(`Actual Fee: ${tx.fee.actual_fee}`);
+    if (tx.fee.token_id) console.log(`Token ID: ${tx.fee.token_id}`);
     if (tx.fee.fee_used) console.log(`Fee Used: ${tx.fee.fee_used}`);
+    if (tx.fee.estimated_fee_used) console.log(`Estimated Fee: ${tx.fee.estimated_fee_used}`);
 
     // Display type-specific fee details
     switch (tx.fee.fee_type) {
       case 'EVM_EIP_1559':
         if (tx.fee.max_fee_per_gas) console.log(`Max Fee Per Gas: ${tx.fee.max_fee_per_gas} wei`);
-        if (tx.fee.max_priority_fee_per_gas) console.log(`Max Priority Fee: ${tx.fee.max_priority_fee_per_gas} wei`);
+        if (tx.fee.max_priority_fee_per_gas) console.log(`Max Priority Fee Per Gas: ${tx.fee.max_priority_fee_per_gas} wei`);
+        if (tx.fee.effective_gas_price) console.log(`Effective Gas Price: ${tx.fee.effective_gas_price} wei`);
         if (tx.fee.gas_limit) console.log(`Gas Limit: ${tx.fee.gas_limit}`);
         if (tx.fee.gas_used) console.log(`Gas Used: ${tx.fee.gas_used}`);
         break;
@@ -198,16 +198,24 @@ export async function getTransaction(transactionId, options) {
 
       case 'UTXO':
         if (tx.fee.fee_rate) console.log(`Fee Rate: ${tx.fee.fee_rate} sat/vByte`);
+        if (tx.fee.max_fee_amount) console.log(`Max Fee Amount: ${tx.fee.max_fee_amount}`);
+        break;
+
+      case 'Fixed':
+        if (tx.fee.max_fee_amount) console.log(`Max Fee Amount: ${tx.fee.max_fee_amount}`);
         break;
 
       case 'SOL':
+        if (tx.fee.base_fee) console.log(`Base Fee: ${tx.fee.base_fee} SOL`);
+        if (tx.fee.rent_amount) console.log(`Rent Amount: ${tx.fee.rent_amount} SOL`);
         if (tx.fee.compute_unit_price) console.log(`Compute Unit Price: ${tx.fee.compute_unit_price}`);
         if (tx.fee.compute_unit_limit) console.log(`Compute Unit Limit: ${tx.fee.compute_unit_limit}`);
         break;
 
       case 'FIL':
-        if (tx.fee.gas_fee_cap) console.log(`Gas Fee Cap: ${tx.fee.gas_fee_cap}`);
+        if (tx.fee.gas_base) console.log(`Gas Base Fee: ${tx.fee.gas_base}`);
         if (tx.fee.gas_premium) console.log(`Gas Premium: ${tx.fee.gas_premium}`);
+        if (tx.fee.gas_fee_cap) console.log(`Gas Fee Cap: ${tx.fee.gas_fee_cap}`);
         if (tx.fee.gas_limit) console.log(`Gas Limit: ${tx.fee.gas_limit}`);
         break;
     }
